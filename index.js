@@ -1,7 +1,6 @@
 var express = require('express')
 const morgan = require('morgan');
 var http = require('http')
-var https = require('https')
 var app = express()
 const os = require('os');
 const jwt = require('jsonwebtoken');
@@ -74,13 +73,7 @@ app.all('*', (req, res) => {
   }
 });
 
-const sslOpts = {
-  key: require('fs').readFileSync('privkey.pem'),
-  cert: require('fs').readFileSync('fullchain.pem'),
-};
-
 var httpServer = http.createServer(app).listen(process.env.HTTP_PORT || 80);
-var httpsServer = https.createServer(sslOpts,app).listen(process.env.HTTPS_PORT || 443);
 
 let calledClose = false;
 
@@ -99,9 +92,7 @@ function shutDown(){
   console.log('Got a kill signal. Trying to exit gracefully.');
   calledClose = true;
   httpServer.close(function() {
-    httpsServer.close(function() {
-      console.log("HTTP and HTTPS servers closed. Asking process to exit.");
+      console.log("HTTP server closed. Asking process to exit.");
       process.exit()
-    });
   });
 }
