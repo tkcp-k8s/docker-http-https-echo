@@ -1,6 +1,0 @@
-my-http-listener:
-    image: rpardini/http-echo:17
-    environment:
-        - HTTP_PORT=8888
-    ports:
-        - "8080:8888"
